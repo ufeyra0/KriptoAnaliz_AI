@@ -1,8 +1,8 @@
 streamlit
-tensorflow
+tensorflow-cpu
 opencv-python-headless
 numpy
 mplfinance
 pandas
-yfinance
+yfinance>=0.2.40
 plotly
