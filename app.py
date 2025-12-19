@@ -41,8 +41,13 @@ if 'symbol' not in st.session_state:
 @st.cache_resource
 def model_yukle():
     try:
+        
+        if not os.path.exists('bitcoin_dual_model.h5'):
+            st.error("Model dosyası (bitcoin_dual_model.h5) bulunamadı! Lütfen GitHub'a yüklediğinden emin ol.")
+            return None
         return tf.keras.models.load_model('bitcoin_dual_model.h5')
-    except:
+    except Exception as e:
+        st.error(f"Model yüklenirken hata oluştu: {e}")
         return None
 model = model_yukle()
 
@@ -54,13 +59,11 @@ st.markdown("Analiz etmek istediğiniz varlığı seçiniz. Veriler anlık olara
 col_btn1, col_btn2 = st.columns(2)
 
 with col_btn1:
-    
     if st.button("BITCOIN ₿", use_container_width=True):
         st.session_state.symbol = 'BTC-USD'
         st.rerun()
 
 with col_btn2:
-    
     if st.button("ETHEREUM ⟠", use_container_width=True):
         st.session_state.symbol = 'ETH-USD'
         st.rerun()
@@ -85,7 +88,11 @@ yenile_butonu = st.sidebar.button("🔄 Piyasayı Yenile", use_container_width=T
 
 def interaktif_grafik_ciz(df, baslik, cizgiler=[], zoom_start=None, zoom_end=None):
     fig = go.Figure()
-    df['DateStr'] = df.index.strftime('%d %b %H:%M')
+   
+    if isinstance(df.index, pd.DatetimeIndex):
+         df['DateStr'] = df.index.strftime('%d %b %H:%M')
+    else:
+         df['DateStr'] = df.index.astype(str)
 
     fig.add_trace(go.Candlestick(
         x=df['DateStr'], 
@@ -147,8 +154,10 @@ c1, c2 = st.columns([3, 1])
 with c1:
     st.subheader(f"⚡ {coin_name} Analiz Ekranı")
 with c2:
-    if model is None: st.error("Model Hatası")
-    else: st.success(f"Yapay Zeka: {coin_short} Modunda 🟢")
+    if model is None: 
+        st.warning("Yapay Zeka Modeli Yüklenemedi (Sadece grafikler çalışacak)")
+    else: 
+        st.success(f"Yapay Zeka: {coin_short} Modunda 🟢")
 
 levels = []
 anlik_fiyat = 0
@@ -156,18 +165,30 @@ direnc, destek = 0, 0
 prob = 0.5
 trend_yukari = True
 
+
 with st.spinner(f'{coin_name} için global piyasa verileri taranıyor...'):
     try:
-        ticker = yf.Ticker(current_symbol)
-        df_daily = ticker.history(period='1y', interval='1d')
-        df_hourly = ticker.history(period='1y', interval='1h')
+        
+        df_daily = yf.download(current_symbol, period='1y', interval='1d', progress=False)
+        df_hourly = yf.download(current_symbol, period='1y', interval='1h', progress=False)
+        
         
         if df_hourly.empty or df_daily.empty:
-            st.error("Veri çekilemedi. Lütfen sayfayı yenileyin.")
+            st.error("Veri sunucudan boş döndü. Lütfen 5 saniye bekleyip 'Piyasayı Yenile' butonuna basın.")
             st.stop()
             
-        df_daily.index = df_daily.index.tz_localize(None)
-        df_hourly.index = df_hourly.index.tz_localize(None)
+       
+        if isinstance(df_daily.columns, pd.MultiIndex):
+            df_daily.columns = df_daily.columns.get_level_values(0)
+        if isinstance(df_hourly.columns, pd.MultiIndex):
+            df_hourly.columns = df_hourly.columns.get_level_values(0)
+
+       
+        if df_daily.index.tz is not None:
+             df_daily.index = df_daily.index.tz_localize(None)
+        if df_hourly.index.tz is not None:
+             df_hourly.index = df_hourly.index.tz_localize(None)
+        
         
         ohlc_rules = {'Open': 'first', 'High': 'max', 'Low': 'min', 'Close': 'last'}
         df_4h = df_hourly.resample('4h').agg(ohlc_rules).dropna()
@@ -205,7 +226,7 @@ with st.spinner(f'{coin_name} için global piyasa verileri taranıyor...'):
             prob, trend_yukari = 0.5, True
 
     except Exception as e:
-        st.error(f"Bağlantı Hatası: {e}")
+        st.error(f"Veri Bağlantı Hatası: {e}")
         st.stop()
 
 
