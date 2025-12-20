@@ -49,7 +49,7 @@ Bu projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımlar�
 
 git clone [https://github.com/ufeyra0/KriptoAnaliz_AI.git](https://github.com/ufeyra0/KriptoAnaliz_AI.git)
 
-cd proje-isminiz
+cd KriptoAnaliz_AI
 
 ### 2. Gerekli Kütüphaneleri Yükleyin
 pip install -r requirements.txt
