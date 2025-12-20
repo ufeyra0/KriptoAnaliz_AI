@@ -58,7 +58,7 @@ pip install -r requirements.txt
 python -m streamlit run app.py
 
 
-### 🧠 Model Mimarisi
+## 🧠 Model Mimarisi
 Sistem, önceden eğitilmiş bir .h5 modeli kullanır. Model şu adımlardan oluşur:
 
 1.Giriş: 2 Adet Görüntü (Günlük Grafik + 4 Saatlik Grafik).
@@ -70,7 +70,7 @@ Sistem, önceden eğitilmiş bir .h5 modeli kullanır. Model şu adımlardan olu
 4.Karar: Dense katmanları ve Sigmoid aktivasyon fonksiyonu ile 0-1 arası olasılık hesabı.
 
 
-### 📂 Dosya Yapısı
+## 📂 Dosya Yapısı
 app.py: Ana uygulama ve arayüz kodları.
 
 bitcoin_dual_model.h5: Eğitilmiş Yapay Zeka modeli.
