@@ -48,6 +48,7 @@ Bu projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımlar�
 ### 1. Projeyi Klonlayın
 
 git clone [https://github.com/KULLANICI_ADINIZ/proje-isminiz.git](https://github.com/KULLANICI_ADINIZ/proje-isminiz.git)
+
 cd proje-isminiz
 
 ### 2. Gerekli Kütüphaneleri Yükleyin
