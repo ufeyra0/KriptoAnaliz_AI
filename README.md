@@ -47,7 +47,7 @@ Bu projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımlar�
 
 ### 1. Projeyi Klonlayın
 
-git clone [https://github.com/KULLANICI_ADINIZ/proje-isminiz.git](https://github.com/KULLANICI_ADINIZ/proje-isminiz.git)
+git clone [https://github.com/ufeyra0/KriptoAnaliz_AI.git](https://github.com/ufeyra0/KriptoAnaliz_AI.git)
 
 cd proje-isminiz
 
